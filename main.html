@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>MJML/Handlebars Template Preview</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0px;
+            }
+
+            .col {
+                position: absolute;
+                top: 0px;
+                width: 50vw;
+                height: 100vh;
+            }
+
+            .col.left {
+                left: 0px;
+            }
+            .col.right {
+                right: 0px;
+            }
+
+            .input-container {
+                width: 100%;
+                height: calc(50% - 20px);
+            }
+
+            .input-container .label {
+                display: inline-block;
+                height: 1em;
+                line-height: 1em;
+            }
+
+            .in {
+                display: block;
+                width: 100%;
+                height: calc(100% - 2em);
+            }
+
+            #compile {
+                width: 100%;
+                height: 35px;
+            }
+
+            #preview {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="col left">
+            <div class="input-container">
+                <span class="label">Template:</span>
+                <textarea id="templateInput" class="in"></textarea>
+            </div>
+            <div class="input-container">
+                <span class="label">Handlebars Parameters:</span>
+                <textarea id="handlebarsInput" class="in"></textarea>
+            </div>
+            <button id="compile" onclick="compile()">Compile</button>
+        </div>
+        <div class="col right">
+            <iframe id="preview"></iframe>
+        </div>
+    </body>
+    <script>
+        function compile() {
+            const template = document.getElementById('templateInput').value;
+            const hbsInput = document.getElementById('handlebarsInput').value;
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'http://localhost:3000/compile');
+            request.setRequestHeader('Content-Type', 'application/json');
+
+            request.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    document.getElementById('preview').src = "data:text/html;charset=utf-8," + escape(request.responseText);
+                }
+            };
+
+            request.send(JSON.stringify({ template: template, input: hbsInput }));
+        }
+    </script>
+</html>
