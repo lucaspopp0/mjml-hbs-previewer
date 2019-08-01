@@ -80,12 +80,12 @@
             request.setRequestHeader('Content-Type', 'application/json');
 
             request.onreadystatechange = function() {
-                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                if (this.readyState === XMLHttpRequest.DONE) {
                     document.getElementById('preview').src = "data:text/html;charset=utf-8," + escape(request.responseText);
                 }
             };
 
-            request.send(JSON.stringify({ template: template, input: hbsInput }));
+            request.send(JSON.stringify({ template: template, input: JSON.parse(hbsInput) }));
         }
     </script>
 </html>
