@@ -73,7 +73,11 @@
     <script>
         function compile() {
             const template = document.getElementById('templateInput').value;
-            const hbsInput = document.getElementById('handlebarsInput').value;
+            let hbsInput = document.getElementById('handlebarsInput').value;
+
+            if (!hbsInput || hbsInput.trim() === '') {
+                hbsInput = '{}';
+            }
 
             const request = new XMLHttpRequest();
             request.open('POST', 'http://localhost:3000/compile');
